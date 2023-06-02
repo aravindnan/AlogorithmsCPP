@@ -2,7 +2,12 @@
 #include <conio.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include<map>
+#include<unordered_map>
+#include<vector>
+#include<algorithm>
 using namespace std;
+
 
 // -------Stack----------
 int stack[10],stackTop=-1,stackMax=10;
@@ -628,6 +633,189 @@ void dllDeleteEnd(){
 }
 
 
+// ----Hash Map---
+struct Person {
+    int id;
+    std::string name;
+};
+std::unordered_map<int, std::string> hashMap;
+// Custom hash function for MyClass
+void HashMapFunctionCreateEntry(){
+    int key;string value;
+    cout<<"Enter Key(integer) and Value(string) respectively\n";
+    cin>>key>>value;
+    if(hashMap.count(key) == 0)
+    {
+    hashMap.insert(std::make_pair(key, value));
+    return;
+    }
+    else{
+        cout<<"\nValue already exist with such key\n";
+        return;
+    }
+
+}
+void HashMapFunctionUpdateEntry(){
+    int changeKey; string value;
+    cout<<"Enter Key for which value should be changed\n";
+    cin>>changeKey;
+    if(hashMap.count(changeKey) > 0)
+    {
+        cout<<"Enter New Value for key "<<changeKey<<"\t";
+        cin>>value;
+        hashMap[changeKey]=value;
+        return;
+    }
+    else{
+         cout<<"There is no such element with Key"<<changeKey<<"\t";
+         return;
+    }
+
+} 
+void HashMapFunctionDeleteEntry(){
+     int delKey; string value;
+    cout<<"Enter Key for which value should be deleted\n";
+    cin>>delKey;
+    if(hashMap.count(delKey) > 0)
+        {
+        hashMap.erase(delKey);
+        cout<<"Value Deletedwith Key "<<delKey<<endl;
+        return;
+        }
+    else{
+        cout<<"There is no such element with Key"<<delKey<<"\t";
+        return;
+    }
+}
+void HashMapFunctionDiplayAllEntry(){
+    if(hashMap.size()>0){
+    cout<<"\nThe Hash List is :\n";
+      for (const auto& pair : hashMap) {
+        std::cout << "Key: " << pair.first << ", Value: " << pair.second << std::endl;
+    }
+    return;
+    }
+    else{
+        cout<<"\tHash table is empty\n";
+        return;
+    }
+}
+
+// ---Graph---
+class Graph {
+public:
+    // Constructor
+    Graph(int vertices) : numVertices(vertices), adjList(vertices) {}
+
+    // Add an edge to the graph
+    void addEdge(int src, int dest) {
+        adjList[src].push_back(dest);
+    }
+
+    // Delete an edge from the graph
+    void deleteEdge(int src, int dest) {
+        auto it = std::find(adjList[src].begin(), adjList[src].end(), dest);
+        if (it != adjList[src].end()) {
+            adjList[src].erase(it);
+        }
+    }
+
+    // Print the adjacency list representation of the graph
+    void printGraph() {
+        for (int i = 0; i < numVertices; ++i) {
+           cout << "Vertex " << i << " -> ";
+            for (int neighbor : adjList[i]) {
+                cout << neighbor << " ";
+            }
+            cout <<endl;
+        }
+    }
+
+private:
+    int numVertices;                  // Number of vertices in the graph
+    vector<std::vector<int>> adjList;  // Adjacency list representation
+};
+
+
+// --Binary Tree---
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int value):data(value),left(nullptr),right(nullptr){}
+};
+
+class BinaryTree{
+    private:Node* root;
+    public:
+    BinaryTree(){
+        root=nullptr;
+    }
+
+    void insertNode(int value){
+        root=insertNodeRecursive(root,value);
+    }
+
+    Node* insertNodeRecursive(Node* currentNode,int value){
+        if(currentNode==nullptr){
+            return new Node(value);
+        }
+        if(currentNode->data>value){
+            currentNode->left= insertNodeRecursive(currentNode->left,value);
+        }
+        else{
+            currentNode->right= insertNodeRecursive(currentNode->right,value);
+        }
+
+        return currentNode;
+    }
+
+    void preorderTreeTraversal(){
+        preRecursive(root);
+    }
+
+    void preRecursive(Node* currentNode ){
+        if(currentNode!=nullptr){
+            cout<<currentNode->data<<"  ";
+            preRecursive(currentNode->left);
+            preRecursive(currentNode->right);
+        }
+    }
+
+     void inorderTreeTraversal(){
+        inRecursive(root);
+    }
+
+    void inRecursive(Node* currentNode ){
+        if(currentNode!=nullptr){
+            inRecursive(currentNode->left);
+            cout<<currentNode->data<<"  ";
+            inRecursive(currentNode->right);
+        }
+    }
+
+     void postorderTreeTraversal(){
+        postRecursive(root);
+    }
+
+    void postRecursive(Node* currentNode ){
+        if(currentNode!=nullptr){
+            postRecursive(currentNode->left);
+            postRecursive(currentNode->right);
+            cout<<currentNode->data<<"  ";
+        }
+    }
+};
+
+
+
+
+
+
+
+
+
 //--------Main--------
 int main()
 {
@@ -641,9 +829,9 @@ int main()
     cout << "3.Circular Queue" << endl;
     cout << "4.Linked List" << endl;
     cout << "5.Doubly Linked List" << endl;
-    // cout << "6.Binary Tree" << endl;
-    // cout << "7.Hash Table" << endl;
-    // cout << "8.Graphs" << endl;
+    cout << "6.Binary Tree" << endl;
+    cout << "7.Hash Table" << endl;
+    cout << "8.Graphs" << endl;
     cout << "9.Linear Search" << endl;
     cout << "10.Binary Search" << endl;
     cout << "11.Bubble Sort" << endl;
@@ -795,6 +983,105 @@ int main()
 	}
  
         } while (subMenuOption!=10); 
+    }
+
+    else if(mainMenuOption==6){
+        BinaryTree Btree;
+        do{
+            cout<<"\n\nBINARY TREE\n\n";
+            cout<<"1.Insert a Node\n";
+            cout<<"2.PRE Order Traversal\n";
+            cout<<"3.IN Order Traversal\n";
+            cout<<"4.POST Order Traversal\n";
+            cout<<"5.Back To  Main Menu\n";
+            cin>>subMenuOption;
+
+            if(subMenuOption==1){
+                int nodeval;
+                cout<<"\nEnter Node Value\n";
+                cin>>nodeval;
+                Btree.insertNode(nodeval);
+            }
+            else if(subMenuOption==2){
+            cout<<"2.PRE Order :";
+            Btree.preorderTreeTraversal();
+            }
+            else if(subMenuOption==3){
+            cout<<"2.IN Order :";
+            Btree.inorderTreeTraversal();
+
+            }
+            else if(subMenuOption==4){
+            cout<<"2.POST Order :";
+            Btree.postorderTreeTraversal();
+            }
+            else;
+
+        }while(subMenuOption!=5);
+    }
+
+    else if(mainMenuOption==7){
+        do{
+            cout << "\n\nHASH TABLE\n\n";
+            cout<<"1.Create table new entry\n";
+            cout<<"2.Update Entry\n";
+            cout<<"3.Delete entry\n";
+            cout<<"4.Display all entries \n";
+            cout<<"5.Back to main menu\n";
+            cin>>subMenuOption;
+            switch(subMenuOption){
+                case 1: HashMapFunctionCreateEntry();break;
+                case 2: HashMapFunctionUpdateEntry();break;
+                case 3: HashMapFunctionDeleteEntry();break;
+                case 4: HashMapFunctionDiplayAllEntry();break;
+
+            }
+        }while(subMenuOption!=5);
+    }
+      else if(mainMenuOption==8){
+            int numVertices;
+            cout << "Enter the number of vertices in the graph: ";
+            cin >> numVertices;
+
+            // Create a graph with the specified number of vertices
+             Graph graph(numVertices);
+
+            int src, dest;
+            int numEdges;
+            std::cout << "Enter the number of edges: ";
+            std::cin >> numEdges;
+
+            std::cout << "Enter the edges (source destination):" << std::endl;
+            for (int i = 0; i < numEdges; ++i) {
+                std::cin >> src >> dest;
+                graph.addEdge(src, dest);
+            }
+        do{
+            cout << "\n\nGRAPH\n\n";
+            cout<<"1.Add an Edge\n";
+            cout<<"2.Delete an Edge\n";
+            cout<<"3.Display the Graph \n";
+            cout<<"4.Back to main menu\n";
+            cin>>subMenuOption;
+            if(subMenuOption==1){
+                int src, dest;
+                cout << "Enter the edges (source destination):" << std::endl;
+                cin >> src >> dest;
+                graph.addEdge(src, dest);    
+            }
+            else if(subMenuOption==2){
+                int src, dest;
+                cout << "Enter the edges (source destination) of edge to be deleted:" <<endl;
+                cin>>src>>dest;
+                graph.deleteEdge(src,dest);
+                cout<<"("<<src<<") --> ("<<dest<<")  is Deleted";
+            }
+            else if(subMenuOption==3){
+                cout<<"\n\n GRAPH \n\n";
+                graph.printGraph();
+            }
+            else;
+        }while(subMenuOption!=4);
     }
     
     //LINEAR SEARCH---------------------
